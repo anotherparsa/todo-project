@@ -15,7 +15,6 @@ db = mysql.connector.connect(
 #defining cursor:
 mycursor = db.cursor()
 
-#home page of user
 @app.route("/")
 def home():
     if session.get("username"):
@@ -83,8 +82,11 @@ def log():
         return "OOps something went wrong"
 
 
-
-
+#logging out
+@app.route("/logout")
+def logout():
+    session["username"] = ""
+    return redirect("/")
 
 
 

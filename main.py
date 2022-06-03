@@ -1,8 +1,9 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 
 app = Flask(__name__)
 
+app.secret_key = "7h151553cr37k3y7h47n0b0dy5h0uldkn0w"
 #connecting to database:
 db = mysql.connector.connect(
     host = "IP",
@@ -15,7 +16,11 @@ mycursor = db.cursor()
 
 @app.route("/")
 def home():
-    return render_template("home/home.html")
+    if session.get("username"):
+        return render_template("registration/registration.html")
+    else:
+        return redirect("/login")
+    
 
 #registration part:
 #registraiton page:
@@ -39,6 +44,8 @@ def register():
             mycursor.execute("use users")
             mycursor.execute(f"INSERT INTO user (username, password, rule) VALUES (\'{username}\', \'{password}\', \'{rule}\')")
             db.commit()
+            session["username"] = username
+            session.permanent = True
             return redirect("/")
     else:
         return "your information doesn't have the requeirenments"
@@ -60,6 +67,8 @@ def log():
         mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' AND password='\{password}\' ")
         userValid = mycursor.fetchall()
         if userValid:
+            session["username"] = username
+            session.permanent = True
             return redirect("/")
         else:
             return "your information isn't correct"

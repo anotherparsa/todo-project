@@ -1,3 +1,4 @@
+from asyncio import tasks
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 
@@ -14,10 +15,16 @@ db = mysql.connector.connect(
 #defining cursor:
 mycursor = db.cursor()
 
+#home page of user
 @app.route("/")
 def home():
     if session.get("username"):
-        return render_template("registration/registration.html")
+        owner = session.get("username")
+        mycursor.execute("use users")
+        mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
+        tasks = mycursor.fetchall()
+        tasknumber = len(tasks)
+        return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
     else:
         return redirect("/login")
     

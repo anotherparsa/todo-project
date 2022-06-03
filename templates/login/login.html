@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            LOGIN
+        </title>
+        <link rel="stylesheet" href="static/loginreg.css">
+    </head>
+    <body>
+        <div class="login-box">
+        <h2>LOGIN</h2>
+            <form action="/log" method="POST">
+                <div class="user-box">
+                    <input name="username" type="text" required axlength="10" minlength="5">
+                    <label>Username</label>
+                </div>
+                <div class="user-box">
+                    <input name="password" type="password" required maxlength="12" minlength="8"><br><br>
+                    <label>Password</label>
+                </div>
+                <a href="#">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <button type="submit">LOGIN</button>
+                </a>
+                <a href="/registration">
+                    DONT HAVE AN ACCOUNT?
+                </a>
+            </form>
+        </div>
+    </body>
+</html>

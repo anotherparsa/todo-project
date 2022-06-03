@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, redirect, render_template, request
 import mysql.connector
 
@@ -24,7 +23,7 @@ def home():
 def registration():
     return render_template("registration/registration.html")
 
-
+#registration operation
 @app.route("/register", methods=["POST"])
 def register():
     username = request.form.get("username")
@@ -42,10 +41,30 @@ def register():
             db.commit()
             return redirect("/")
     else:
-        return "your username doesn't have the requeirenments"
+        return "your information doesn't have the requeirenments"
 
 
+#loign part:
+#login page:
+@app.route("/login")
+def login():
+    return render_template("login/login.html")
 
+#logging in operation
+@app.route("/log", methods=["POST"])
+def log():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    if len(username) <= 10 and len(password) <= 12:
+        mycursor.execute("use users")
+        mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' AND password='\{password}\' ")
+        userValid = mycursor.fetchall()
+        if userValid:
+            return redirect("/")
+        else:
+            return "your information isn't correct"
+    else:
+        return "OOps something went wrong"
 
 
 

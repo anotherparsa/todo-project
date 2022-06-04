@@ -1,6 +1,6 @@
-from asyncio import tasks
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
+import hashlib
 
 app = Flask(__name__)
 
@@ -38,23 +38,20 @@ def registration():
 @app.route("/register", methods=["POST"])
 def register():
     username = request.form.get("username")
-    password = request.form.get("password")
-    if len(username) <= 10 and len(password) <= 12:
-        mycursor.execute("use users")
-        mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' ")
-        userExist = mycursor.fetchall()
-        rule = "user"
-        if userExist:
-            return "sorry the username is already exist"
-        else:
-            mycursor.execute("use users")
-            mycursor.execute(f"INSERT INTO user (username, password, rule) VALUES (\'{username}\', \'{password}\', \'{rule}\')")
-            db.commit()
-            session["username"] = username
-            session.permanent = True
-            return redirect("/")
+    password = hashlib.sha256(request.form.get("password").encode("utf-8")).hexdigest()
+    mycursor.execute("use users")
+    mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' ")
+    userExist = mycursor.fetchall()
+    rule = "user"
+    if userExist:
+        return "sorry the username is already exist"
     else:
-        return "your information doesn't have the requeirenments"
+        mycursor.execute("use users")
+        mycursor.execute(f"INSERT INTO user (username, password, rule) VALUES (\'{username}\', \'{password}\', \'{rule}\')")
+        db.commit()
+        session["username"] = username
+        session.permanent = True
+        return redirect("/")
 
 
 #loign part:
@@ -67,19 +64,16 @@ def login():
 @app.route("/log", methods=["POST"])
 def log():
     username = request.form.get("username")
-    password = request.form.get("password")
-    if len(username) <= 10 and len(password) <= 12:
-        mycursor.execute("use users")
-        mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' AND password='\{password}\' ")
-        userValid = mycursor.fetchall()
-        if userValid:
-            session["username"] = username
-            session.permanent = True
-            return redirect("/")
-        else:
-            return "your information isn't correct"
+    password = hashlib.sha256(request.form.get("password").encode("utf-8")).hexdigest()
+    mycursor.execute("use users")
+    mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' AND password='\{password}\' ")
+    userValid = mycursor.fetchall()
+    if userValid:
+        session["username"] = username
+        session.permanent = True
+        return redirect("/")
     else:
-        return "OOps something went wrong"
+        return "your information isn't correct"
 
 
 #logging out

@@ -82,6 +82,17 @@ def logout():
     session["username"] = ""
     return redirect("/")
 
+#submitting the task to store in database
+@app.route("/submittask", methods=["POST"])
+def submitTask():
+    isdone = "0"
+    owner = session.get("username")
+    priority = "0"
+    task = request.form.get("task")
+    mycursor.execute("use users")
+    mycursor.execute(f"INSERT INTO task (task, priority, isdone, owner) VALUES (\'{task}\',\'{priority}\',\'{isdone}\',\'{owner}\')")
+    db.commit()
+    return redirect("/")
 
 
 if __name__ == "__main__":

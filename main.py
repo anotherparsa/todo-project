@@ -94,6 +94,16 @@ def submitTask():
     db.commit()
     return redirect("/")
 
+@app.route("/deletetask/<owner>/<int:keyfordel>")
+def deletetask(owner, keyfordel):
+    if owner != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        mycursor.execute("use users")
+        mycursor.execute(f"DELETE FROM task WHERE id={keyfordel} AND owner=\'{owner}\' ")
+        db.commit()
+        return redirect("/")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

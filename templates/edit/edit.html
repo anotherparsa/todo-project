@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            edit 
+        </title>
+        <link rel="stylesheet" href="static/loginreg.css">
+    </head>
+
+    <body>
+        <form action="/updatetask/{{owner}}/{{keyforedit}}" method="post">
+            <p>the corrent post:</p>
+            <input name="updated" type="text" value="{{task}}">
+            <button type="submit">UPDATE</button>
+        </form>
+    </body>
+</html>

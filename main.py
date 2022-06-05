@@ -1,4 +1,6 @@
+from crypt import methods
 from ssl import SSLSession
+from types import new_class
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -6,6 +8,7 @@ import hashlib
 app = Flask(__name__)
 
 app.secret_key = "7h151553cr37k3y7h47n0b0dy5h0uldkn0w"
+
 #connecting to database:
 db = mysql.connector.connect(
     host = "IP",
@@ -16,6 +19,7 @@ db = mysql.connector.connect(
 #defining cursor:
 mycursor = db.cursor()
 
+#home route
 @app.route("/")
 def home():
     if session.get("username"):
@@ -35,7 +39,7 @@ def home():
 def registration():
     return render_template("registration/registration.html")
 
-#registration operation
+#registration operation:
 @app.route("/register", methods=["POST"])
 def register():
     username = request.form.get("username")
@@ -61,7 +65,7 @@ def register():
 def login():
     return render_template("login/login.html")
 
-#logging in operation
+#logging in operation:
 @app.route("/log", methods=["POST"])
 def log():
     username = request.form.get("username")
@@ -77,13 +81,13 @@ def log():
         return "your information isn't correct"
 
 
-#logging out
+#logging out:
 @app.route("/logout")
 def logout():
     session["username"] = ""
     return redirect("/")
 
-#submitting the task to store in database
+#submitting the task to store in database:
 @app.route("/submittask", methods=["POST"])
 def submitTask():
     isdone = "0"
@@ -95,7 +99,7 @@ def submitTask():
     db.commit()
     return redirect("/")
 
-#deleting the task from database
+#deleting the task from database:
 @app.route("/deletetask/<owner>/<int:keyfordel>")
 def deletetask(owner, keyfordel):
     if owner != session.get("username"):
@@ -106,7 +110,7 @@ def deletetask(owner, keyfordel):
         db.commit()
         return redirect("/")
 
-#done and un-done part
+#done and un-done part:
 @app.route("/isdone/<owner>/<int:key>/<int:status>")
 def isdone(owner, key, status):
     if owner != session.get("username"):
@@ -123,6 +127,25 @@ def isdone(owner, key, status):
             return redirect("/")
         else:
             return "something went wrong"
+
+#editing the task:
+@app.route("/edittask/<owner>/<int:keyforedit>/<task>")
+def edittask(owner, task, keyforedit):
+    if owner != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        return render_template("edit/edit.html", task=task, owner=owner, keyforedit=keyforedit)
+    
+@app.route("/updatetask/<owner>/<int:keyforedit>", methods=["post"])
+def updatetask(owner, keyforedit):
+    if owner != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        newTask = request.form.get("updated")
+        mycursor.execute("use users")
+        mycursor.execute(f"UPDATE task SET task=\'{newTask}\' WHERE id=\'{keyforedit}\' AND owner=\'{owner}\' ")
+        db.commit()
+        return redirect("/")
 
 
 if __name__ == "__main__":

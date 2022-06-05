@@ -1,3 +1,4 @@
+from ssl import SSLSession
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -94,6 +95,7 @@ def submitTask():
     db.commit()
     return redirect("/")
 
+#deleting the task from database
 @app.route("/deletetask/<owner>/<int:keyfordel>")
 def deletetask(owner, keyfordel):
     if owner != session.get("username"):
@@ -103,6 +105,24 @@ def deletetask(owner, keyfordel):
         mycursor.execute(f"DELETE FROM task WHERE id={keyfordel} AND owner=\'{owner}\' ")
         db.commit()
         return redirect("/")
+
+#done and un-done part
+@app.route("/isdone/<owner>/<int:key>/<int:status>")
+def isdone(owner, key, status):
+    if owner != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        mycursor.execute("use users")
+        if status == 1:
+            mycursor.execute(f"UPDATE task SET isdone='0' WHERE id=\'{key}\' AND owner=\'{owner}\'")
+            db.commit()
+            return redirect("/")
+        elif status == 0:
+            mycursor.execute(f"UPDATE task SET isdone='1' WHERE id=\'{key}\' AND owner=\'{owner}\'")
+            db.commit()
+            return redirect("/")
+        else:
+            return "something went wrong"
 
 
 if __name__ == "__main__":

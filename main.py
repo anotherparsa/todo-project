@@ -68,7 +68,7 @@ def log():
     username = request.form.get("username")
     password = hashlib.sha256(request.form.get("password").encode("utf-8")).hexdigest()
     mycursor.execute("use users")
-    mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' AND password='\{password}\' ")
+    mycursor.execute(f"SELECT username FROM user WHERE username='\{username}\' AND password='\{password}\' ")
     userValid = mycursor.fetchall()
     if userValid:
         session["username"] = username
@@ -132,8 +132,7 @@ def edittask(owner, task, keyforedit):
         return "sorry you're not authorized for this"
     else:
         return render_template("edit/edit.html", task=task, owner=owner, keyforedit=keyforedit)
-
-#updating task
+#updating task:
 @app.route("/updatetask/<owner>/<int:keyforedit>", methods=["post"])
 def updatetask(owner, keyforedit):
     if owner != session.get("username"):
@@ -145,13 +144,13 @@ def updatetask(owner, keyforedit):
         db.commit()
         return redirect("/")
 
-#deleting task
+#deleting account part
 @app.route("/deleteaccount/<userDelete>")
 def userdelete(userDelete):
-    
     if session.get("username") == userDelete:   
         mycursor.execute("use users")
         mycursor.execute(f"DELETE FROM user WHERE username=\'{userDelete}\'")
+        mycursor.execute(f"DELETE FROM task WHERE owner=\'{userDelete}\'")
         db.commit()
         return redirect("/registration")
     else:

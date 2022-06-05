@@ -1,7 +1,3 @@
-	from crypt import methods
-import re
-from ssl import SSLSession
-from types import new_class
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -136,7 +132,8 @@ def edittask(owner, task, keyforedit):
         return "sorry you're not authorized for this"
     else:
         return render_template("edit/edit.html", task=task, owner=owner, keyforedit=keyforedit)
-    
+
+#updating task
 @app.route("/updatetask/<owner>/<int:keyforedit>", methods=["post"])
 def updatetask(owner, keyforedit):
     if owner != session.get("username"):
@@ -148,6 +145,7 @@ def updatetask(owner, keyforedit):
         db.commit()
         return redirect("/")
 
+#deleting task
 @app.route("/deleteaccount/<userDelete>")
 def userdelete(userDelete):
     

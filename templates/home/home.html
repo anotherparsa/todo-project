@@ -41,6 +41,13 @@
                     <div class="col">
                         <input class="form-control form-control-lg border-0 add-todo-input bg-transparent rounded" type="text" name="task" placeholder="Add new ..">
                     </div>
+                    <label for="priority">priority:</label>
+                    <select name="priority" id="priority">
+                        <option value="1">Low</option>
+                        <option value="2">Medium</option>
+                        <option value="3">High</option>
+                      </select>
+                      <br><br>
                     <div class="col-auto px-0 mx-0 mr-2">   
                         <button type="submit" class="btn btn-primary">ADD</button>
                     </div>
@@ -59,6 +66,13 @@
             </div>
             <div class="col-auto m-1 p-0 todo-actions">
                 <div class="row d-flex align-items-center justify-content-end">
+                    <h5 class="m-0 p-0 px-2">
+                        <div class="col-lg-6 login-btm login-button"> 
+                            <a class="btn btn-outline-primary" href=#>
+                                Priority: {{tasks[i][2]}}
+                            </a>
+                        </div>
+                    </h5>
                     <h5 class="m-0 p-0 px-2">
                         <div class="col-lg-6 login-btm login-button"> 
                             <a class="btn btn-outline-primary" href="/edittask/{{user}}/{{tasks[i][0]}}/{{tasks[i][1]}}">

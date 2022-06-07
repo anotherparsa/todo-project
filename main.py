@@ -1,7 +1,3 @@
-from crypt import methods
-import re
-from ssl import SSLSession
-from types import new_class
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -164,6 +160,25 @@ def userdelete(userDelete):
 @app.errorhandler(404)
 def page_not_found(e):
 	return render_template("404/404.html"), 404
+
+#changing user pass:
+@app.route("/changepassword/<user>")
+def changepassword(user):
+    if user != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        return render_template("changepass/changepass.html", user=user)
+
+@app.route("/cpass/<user>", methods=["post"])
+def updatetas3k(user):
+    if user != session.get("username"):
+        return "sorry you're not authorized for this"
+    else:
+        newpass = hashlib.sha256(request.form.get("newpassword").encode("utf-8")).hexdigest()
+        mycursor.execute("use users")
+        mycursor.execute(f"UPDATE user SET password=\'{newpass}\' WHERE username=\'{user}\' ")
+        db.commit()
+        return redirect("/")
 
 
 

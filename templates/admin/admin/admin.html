@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title> Admin page </title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./static/admin.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class='container'>
+  <div class='navbar'>
+    <div class='title'>
+      Admin page
+    </div>
+    <div class='search'>
+    </div>
+    <div class='user'>
+      <div class='avatar'>
+        <i class='material-icons'>
+          account_circle
+        </i>
+      </div>
+      Hi, Admin
+    </div>
+  </div>
+  <div class='body'>
+    <div class='sidebar'>
+      
+      <div class='item'>
+        <i class='material-icons'>
+          settings
+        </i>
+        <span class='text'> <a href="/admin/deleteaccount"> delete user account</a></span>
+        <i class='material-icons'>
+          chevron_right
+        </i>
+      </div>
+      <div class='item'>
+        <i class='material-icons'>
+          settings
+        </i>
+        <span class='text'> <a href="/logout"> logout</a></span>
+        <i class='material-icons'>
+          chevron_right
+        </i>
+      </div>
+    </div>
+    <div class='content'>
+      <div class='main-stats'>
+        <div class='stat-item'>
+          <i class='material-icons blue'>format_quote</i>
+          <div class='counter'>
+            <div class='count'>{{totalTask}}</div>
+            <div class='description'>Total tasks</div>
+          </div>
+        </div>
+        
+        <div class='stat-item'>
+          <i class='material-icons red'>perm_identity</i>
+          <div class='counter'>
+            <div class='count'>{{totalAccount}}</div>
+            <div class='description'>Totsl accounts</div>
+          </div>
+        </div>
+        <div class='stat-item'>
+          <i class='material-icons yellow'>message</i>
+          <div class='counter'>
+            <div class='count'>{{messageNumber}}</div>
+            <div class='description'>Messages</div>
+          </div>
+        </div>
+        </div>
+        <br>
+        <div class='stat-item1'>
+          {% for i in range(messageNumber) %}
+          <ul>
+              <div class="row px-3 align-items-center todo-item rounded">
+                  <div class="col px-1 m-1 d-flex align-items-center">
+                     {{i+1}} "{{messageToAdmin[i][0]}}" say "{{messageToAdmin[i][1]}}"
+                  </div>
+              </div>
+          </ul>
+          {%endfor%}
+
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- partial -->
+  
+</body>
+</html>

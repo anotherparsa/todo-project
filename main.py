@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -21,14 +22,19 @@ mycursor = db.cursor()
 def home():
     if session.get("username") == "Admin":
         return redirect("/admin")
-
     elif session.get("username"):
         owner = session.get("username")
         mycursor.execute("use users")
-        mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
-        tasks = mycursor.fetchall()
-        tasknumber = len(tasks)
-        return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
+        mycursor.execute(f"SELECT username FROM user WHERE username=\'{owner}\'")
+        userstillexist = mycursor.fetchall()
+        if userstillexist:    
+            mycursor.execute("use users")
+            mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
+            tasks = mycursor.fetchall()
+            tasknumber = len(tasks)
+            return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
+        else:
+            return redirect("/login")
     else:
         return redirect("/login")
     
@@ -191,14 +197,47 @@ def admin():
     isThisAdmin = mycursor.fetchall()
     if session.get("username") == "Admin" and isThisAdmin:
         mycursor.execute("use users")
-        mycursor.execute("SELECT username FROM user")
+        mycursor.execute("SELECT * FROM user")
         totalAccount = len(mycursor.fetchall())
-        mycursor.execute("SELECT task FROM task")
+        mycursor.execute("SELECT * FROM task")
         totalTask = len(mycursor.fetchall())
-        return render_template("admin/admin.html", totalAccount=totalAccount, totalTask=totalTask )
+        mycursor.execute("SELECT * FROM messages")
+        messageToAdmin = mycursor.fetchall()
+        messageNumber = len(messageToAdmin)
+        return render_template("admin/admin/admin.html", totalAccount=totalAccount, totalTask=totalTask, messageToAdmin=messageToAdmin, messageNumber=messageNumber)
 
-        
+#admin delete account 
+@app.route("/admin/deleteaccount")
+def admindelete():
+    if session.get("username") == "Admin":
+        return render_template("admin/deleteAccount/deleteacc.html")
+    else:
+        return "sorry you're not authorized for this"
 
+@app.route("/admin/delaccount", methods=["POST"])
+def admindel():
+    if session.get("username") == "Admin":
+        userToDel = request.form.get("delete")
+        mycursor.execute("use users")
+        mycursor.execute(f"DELETE FROM user WHERE username=\'{userToDel}\'")
+        db.commit()
+        return redirect("/admin")
+    else:
+        return "sorry you're not authorized for this"
+
+#contact to admin:
+@app.route("/contactm")
+def contactm():
+    return render_template("contact/contact.html")
+
+@app.route("/contact", methods=["POST"])
+def contact():
+    message = request.form.get("message")
+    sender = session.get("username")
+    mycursor.execute("use users")
+    mycursor.execute(f"INSERT INTO messages (sender, message) VALUES (\'{sender}\', \'{message}\')")
+    db.commit()
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)

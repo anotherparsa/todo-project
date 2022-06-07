@@ -1,4 +1,5 @@
 from crypt import methods
+from multiprocessing import reduction
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib
@@ -100,10 +101,13 @@ def submitTask():
     owner = session.get("username")
     priority = request.form.get("priority")
     task = request.form.get("task")
-    mycursor.execute("use users")
-    mycursor.execute(f"INSERT INTO task (task, priority, isdone, owner) VALUES (\'{task}\',\'{priority}\',\'{isdone}\',\'{owner}\')")
-    db.commit()
-    return redirect("/")
+    if task == "":
+        return redirect("/")
+    else:
+        mycursor.execute("use users")
+        mycursor.execute(f"INSERT INTO task (task, priority, isdone, owner) VALUES (\'{task}\',\'{priority}\',\'{isdone}\',\'{owner}\')")
+        db.commit()
+        return redirect("/")
 
 #deleting the task from database:
 @app.route("/deletetask/<owner>/<int:keyfordel>")

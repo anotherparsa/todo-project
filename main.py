@@ -19,7 +19,10 @@ mycursor = db.cursor()
 #home route
 @app.route("/")
 def home():
-    if session.get("username"):
+    if session.get("username") == "Admin":
+        return redirect("/admin")
+
+    elif session.get("username"):
         owner = session.get("username")
         mycursor.execute("use users")
         mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
@@ -168,7 +171,7 @@ def changepassword(user):
         return "sorry you're not authorized for this"
     else:
         return render_template("changepass/changepass.html", user=user)
-
+    
 @app.route("/cpass/<user>", methods=["post"])
 def updatetas3k(user):
     if user != session.get("username"):
@@ -180,6 +183,21 @@ def updatetas3k(user):
         db.commit()
         return redirect("/")
 
+#admin page
+@app.route("/admin")
+def admin():
+    mycursor.execute("use users")
+    mycursor.execute(f"SELECT username FROM user WHERE username='Admin' AND rule='admin' ")
+    isThisAdmin = mycursor.fetchall()
+    if session.get("username") == "Admin" and isThisAdmin:
+        mycursor.execute("use users")
+        mycursor.execute("SELECT username FROM user")
+        totalAccount = len(mycursor.fetchall())
+        mycursor.execute("SELECT task FROM task")
+        totalTask = len(mycursor.fetchall())
+        return render_template("admin/admin.html", totalAccount=totalAccount, totalTask=totalTask )
+
+        
 
 
 if __name__ == "__main__":

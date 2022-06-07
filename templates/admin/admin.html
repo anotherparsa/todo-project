@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title> Admin page </title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./static/admin.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class='container'>
+  <div class='navbar'>
+    <div class='title'>
+      Admin page
+    </div>
+    <div class='search'>
+    </div>
+    <div class='user'>
+      <div class='avatar'>
+        <i class='material-icons'>
+          account_circle
+        </i>
+      </div>
+      Hi, Admin
+    </div>
+  </div>
+  <div class='body'>
+    <div class='sidebar'>
+      
+      <div class='item'>
+        <i class='material-icons'>
+          settings
+        </i>
+        <span class='text'>Settings</span>
+        <i class='material-icons'>
+          chevron_right
+        </i>
+      </div>
+      <div class='item'>
+        <i class='material-icons'>
+          mail
+        </i>
+        <span class='text'>Mail</span>
+        <i class='material-icons'>
+          chevron_right
+        </i>
+      </div>
+    </div>
+    <div class='content'>
+      <div class='main-stats'>
+        <div class='stat-item'>
+          <i class='material-icons blue'>format_quote</i>
+          <div class='counter'>
+            <div class='count'>{{totalTask}}</div>
+            <div class='description'>Total tasks</div>
+          </div>
+        </div>
+        
+        <div class='stat-item'>
+          <i class='material-icons red'>perm_identity</i>
+          <div class='counter'>
+            <div class='count'>{{totalAccount}}</div>
+            <div class='description'>Totsl accounts</div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- partial -->
+  
+</body>
+</html>

@@ -1,5 +1,3 @@
-from crypt import methods
-from multiprocessing import reduction
 from flask import Flask, redirect, render_template, request, session
 import mysql.connector
 import hashlib

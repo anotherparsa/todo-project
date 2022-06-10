@@ -165,6 +165,8 @@ def userdelete(userDelete):
         mycursor.execute("use users")
         mycursor.execute(f"DELETE FROM user WHERE username=\'{userDelete}\'")
         mycursor.execute(f"DELETE FROM task WHERE owner=\'{userDelete}\'")
+        mycursor.execute(f"DELETE FROM messages WHERE sender=\'{userDelete}\'")
+        db.commit()
         db.commit()
         return redirect("/registration")
     else:
@@ -228,6 +230,8 @@ def admindel():
         userToDel = request.form.get("delete")
         mycursor.execute("use users")
         mycursor.execute(f"DELETE FROM user WHERE username=\'{userToDel}\'")
+        mycursor.execute(f"DELETE FROM task WHERE owner=\'{userToDel}\'")
+        mycursor.execute(f"DELETE FROM messages WHERE sender=\'{userToDel}\'")
         db.commit()
         return redirect("/admin")
     else:

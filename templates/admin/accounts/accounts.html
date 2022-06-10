@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>
+            site's users
+        </title>
+    </head>
+
+    <body>
+        {% for i in range(accountsNumber) %}
+        <ul>
+            <li> {{accounts[i][0]}}</li>
+        </ul>
+        {% endfor %}
+        <a href="/admin"> return </a>
+    </body>
+</html>

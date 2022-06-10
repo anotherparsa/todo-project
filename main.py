@@ -219,6 +219,7 @@ def admindelete():
     else:
         return "sorry you're not authorized for this"
 
+#admin delete account
 @app.route("/admin/delaccount", methods=["POST"])
 def admindel():
     if session.get("username") == "Admin":
@@ -235,6 +236,7 @@ def admindel():
 def contactm():
     return render_template("contact/contact.html")
 
+#contact to admin
 @app.route("/contact", methods=["POST"])
 def contact():
     message = request.form.get("message")
@@ -244,6 +246,14 @@ def contact():
     db.commit()
     return redirect("/")
 
+#admin can see the site's account
+@app.route("/admin/accounts")
+def accounts():
+    mycursor.execute("use users")
+    mycursor.execute("SELECT username from user")
+    accounts = mycursor.fetchall()
+    accountsNumber = len(accounts)
+    return render_template("admin/accounts/accounts.html", accounts=accounts, accountsNumber=accountsNumber)
 
 if __name__ == "__main__":
     app.run(debug=True)

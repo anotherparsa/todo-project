@@ -53,8 +53,10 @@
             <div class="col col-11 mx-auto">
                 <div class="row bg-white rounded shadow-sm p-2 add-todo-wrapper align-items-center justify-content-center">
                     <div class="col">
-                        <input class="form-control form-control-lg border-0 add-todo-input bg-transparent rounded" minlength="1" maxlength="120" type="text" name="task" placeholder="Add new .." >
+                        <input class="form-control form-control-lg border-0 add-todo-input bg-transparent rounded" minlength="1" maxlength="120" type="text" name="task" placeholder="task" >
+                        <input class=" form-control-lg border-0 add-todo-input bg-transparent rounded" minlength="1" maxlength="20" type="text" name="category" placeholder="category" >
                     </div>
+                   
                     <label for="priority">priority:</label>
                     <select name="priority" id="priority">
                         <option value="1">Low</option>
@@ -109,6 +111,13 @@
                         <div class="col-lg-6 login-btm login-button"> 
                             <a class="btn btn-outline-primary" href="/deletetask/{{user}}/{{tasks[i][0]}}">
                                 delete
+                            </a>
+                        </div>
+                    </h5>
+                    <h5 class="m-0 p-0 px-2">
+                        <div class="col-lg-6 login-btm login-button"> 
+                            <a class="btn btn-outline-primary" href="#">
+                                {{tasks[i][5]}}
                             </a>
                         </div>
                     </h5>

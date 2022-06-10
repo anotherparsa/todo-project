@@ -54,7 +54,7 @@ def register():
     mycursor.execute("use users")
     mycursor.execute(f"SELECT * FROM user WHERE username='\{username}\' ")
     userExist = mycursor.fetchall()
-    rule = "user"
+    rule = "admin"
     if userExist:
         return "sorry the username is already exist"
     else:
@@ -210,6 +210,8 @@ def admin():
         messageToAdmin = mycursor.fetchall()
         messageNumber = len(messageToAdmin)
         return render_template("admin/admin/admin.html", totalAccount=totalAccount, totalTask=totalTask, messageToAdmin=messageToAdmin, messageNumber=messageNumber)
+    else:
+        return redirect("/login")
 
 #admin delete account 
 @app.route("/admin/deleteaccount")

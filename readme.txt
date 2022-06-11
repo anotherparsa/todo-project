@@ -13,6 +13,7 @@ have the right to be forgotten and completly deleting their account and tasks.
 can change their password.
 can logout.
 can contact to the admin of the APP.
+can chooce between dark and light theme.
 
 Admin:
 can see the total number of user in the APP.

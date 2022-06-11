@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, session
+from flask import Flask, redirect, render_template, request, session, make_response
 import mysql.connector
 import hashlib
 
@@ -10,7 +10,7 @@ app.secret_key = "7h151553cr37k3y7h47n0b0dy5h0uldkn0w"
 
 #connecting to database:
 db = mysql.connector.connect(
-    host = "IP",
+    host = "ID",
     user = "USERNAME",
     password = "PASSWORD"
 )
@@ -33,7 +33,9 @@ def home():
             mycursor.execute(f"SELECT * FROM task WHERE owner=\'{owner}\' ")
             tasks = mycursor.fetchall()
             tasknumber = len(tasks)
-            return render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber)
+            currentTheme=request.cookies.get("theme")
+            response = make_response(render_template("home/home.html", user=owner, tasks=tasks, tasknumber=tasknumber, currentTheme=currentTheme))
+            return response 
         else:
             return redirect("/login")
     else:
@@ -62,8 +64,10 @@ def register():
         mycursor.execute(f"INSERT INTO user (username, password, rule) VALUES (\'{username}\', \'{password}\', \'{rule}\')")
         db.commit()
         session["username"] = username
+        response = make_response(redirect("/"))
+        response.set_cookie("theme", "light")
         session.permanent = True
-        return redirect("/")
+        return response
 
 
 #loign part:
@@ -82,8 +86,10 @@ def log():
     userValid = mycursor.fetchall()
     if userValid:
         session["username"] = username
+        response = make_response(redirect("/"))
+        response.set_cookie("theme", "light")
         session.permanent = True
-        return redirect("/")
+        return response
     else:
         return "your information isn't correct"
 
@@ -260,6 +266,18 @@ def accounts():
     accounts = mycursor.fetchall()
     accountsNumber = len(accounts)
     return render_template("admin/accounts/accounts.html", accounts=accounts, accountsNumber=accountsNumber)
+
+@app.route("/changeTheme")
+def changeTheme():
+    currentTheme = request.cookies.get("theme")
+    if currentTheme == "light":
+        response = make_response(redirect("/"))
+        response.set_cookie("theme", "dark")
+        return response
+    else:
+        response = make_response(redirect("/"))
+        response.set_cookie("theme", "light")
+        return response
 
 if __name__ == "__main__":
     app.run(debug=True)
